@@ -1,27 +1,29 @@
-
 cmake_minimum_required(VERSION 3.10)
-project(LearnOpenGL)
-#file(GLOB_RECURSE SOURCE_FILES
-#       ./src/*.c
-#       ./src/*.cpp)
-#file(GLOB_RECURSE HEADER_FILES
-#       ./include/**/*.h)
+
+project(LearnOpenGL LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/build/debug")
-# Use cmake --help-policy ... to check 
-# set(CMAKE_POLICY_DEFAULT_CMP0072 NEW)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
-include_directories(./include/)
-add_library(Glad ./src/glad.c)
 
-add_executable(exe src/main.cpp)
+add_library(Glad src/glad.c)
 
-target_link_libraries(exe OpenGL)
-target_link_libraries(exe glfw)
-target_link_libraries(exe Glad)
+target_include_directories(Glad PUBLIC
+    ${CMAKE_SOURCE_DIR}/include
+)
 
-target_compile_options(exe PRIVATE -Wall)
+add_executable(LearnOpenGL
+    src/main.cpp
+)
 
+target_link_libraries(LearnOpenGL PRIVATE
+    Glad
+    glfw
+    OpenGL::GL
+)
+
+target_compile_options(LearnOpenGL PRIVATE
+    -Wall
+)
